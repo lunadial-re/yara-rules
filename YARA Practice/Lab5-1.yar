@@ -28,8 +28,8 @@ rule Lab5_1_persistence
 	pe.imports("ADVAPI32.dll","DeleteService")
 	pe.imports("ADVAPI32.dll","OpenService")
 	pe.imports("ADVAPI32.dll","SetServiceStatus")
-	pe.imports("ADVAPI32.dll","OpenSCManager")
-	any of ($svc*))
+	pe.imports("ADVAPI32.dll","OpenSCManager"))
+	and any of ($svc*)
  }
  
  rule Lab5_1_network_based
@@ -48,8 +48,7 @@ rule Lab5_1_persistence
 		and any of(
 		pe.imports("WS2_32.dll","send") 
 		pe.imports("WS2_32.dll", "recv") 
-		pe.imports("WS2_32.dll","socket") 
-		pe.imports("WS2_32.dll", "connect"))
+		pe.imports("WS2_32.dll","socket"))
 }
 
 rule Lab5_1_registry_activity
@@ -70,12 +69,13 @@ rule Lab5_1_registry_activity
 		$reg7="HKEY_CLASSES_ROOT"
 		$reg8="SOFTWARE\\MICROSOFT\\Windows NT\\CurrentVersion\\Svchost"
 	condition:
+		3 of (
 		pe.imports("ADVAPI32.dll","RegOpenKey") 
-		and pe.imports("ADVAPI32.dll","RegCloseKey") 
-		and pe.imports("ADVAPI32.dll","RegCreateKey") 
-		and pe.imports("ADVAPI32.dll","RegDeleteKey") 
-		and pe.imports("ADVAPI32.dll", "RegSetValue")
-		and pe.imports("ADVAPI32.dll", "RegDeleteValue")
+		pe.imports("ADVAPI32.dll","RegCloseKey") 
+		pe.imports("ADVAPI32.dll","RegCreateKey") 
+		pe.imports("ADVAPI32.dll","RegDeleteKey") 
+		pe.imports("ADVAPI32.dll", "RegSetValue")
+		pe.imports("ADVAPI32.dll", "RegDeleteValue"))
 		and any of ($reg*)
 }
 
